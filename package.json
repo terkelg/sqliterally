@@ -1,0 +1,32 @@
+{
+  "name": "sqliterally",
+  "version": "0.0.0",
+  "description": "walk directories recursively",
+  "homepage": "https://github.com/terkelg/sqliterally",
+  "main": "index.js",
+  "author": {
+    "name": "Terkel Gjervig",
+    "email": "terkel@terkel.com",
+    "url": "https://terkel.com"
+  },
+  "scripts": {
+    "test": "tape test/*.js | tap-spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/terkelg/sqliterally"
+  },
+  "keywords": [
+    "walk",
+    "walker",
+    "directories",
+    "files",
+    "list",
+    "dir"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "tap-spec": "^4.1.1",
+    "tape": "^4.9.0"
+  }
+}
