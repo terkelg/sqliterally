@@ -1,0 +1,46 @@
+{
+  "name": "sqliterally",
+  "version": "0.0.0",
+  "repository": "terkelg/sqliterally",
+  "description": "Lightweight SQL query builder",
+  "module": "dist/sqliterally.mjs",
+  "main": "dist/sqliterally.js",
+  "license": "MIT",
+  "author": {
+    "name": "Terkel Gjervig",
+    "email": "terkel@terkel.com",
+    "url": "https://terkel.com"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "scripts": {
+    "build": "rimraf dist && rollup -c",
+    "pretest": "npm run build",
+    "test": "tape test/*.js | tap-spec",
+    "prepublish": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "db",
+    "sql",
+    "orm",
+    "mysql",
+    "query",
+    "builder",
+    "strings",
+    "postgres",
+    "database",
+    "template",
+    "prepared",
+    "statements"
+  ],
+  "devDependencies": {
+    "rimraf": "^2.6.3",
+    "rollup": "^1.19.4",
+    "tap-spec": "5.0.0",
+    "tape": "4.11.0"
+  }
+}
