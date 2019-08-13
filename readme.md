@@ -14,15 +14,17 @@
   </a>
 </div>
 
-<div align="center">Composable and safe parameterized queries using tagged template literals</div>
+<p align="center">
+  <b>Composable and safe parameterized queries using tagged template literals</b>
+</p>
 
-<hr>
+<br>
 
 SQLiterally makes it easy to compose safe parameterized SQL queries using template literals. Clauses are automatically arranged which means you can re-use, subquery and append new clauses as you like – order doesn't matter. All queries are well formatted and ready to be passed directly to [`node-pg`](https://github.com/brianc/node-postgres) and [`mysql`](https://github.com/mysqljs/mysql).
 
-Use SQLiterally as lightweight alternative to extensive query builders like `Knex.js` or projects where big ORMs are over-kill.
+Use SQLiterally as a lightweight alternative to extensive query builders like [`Knex.js`](http://knexjs.org/) or when big ORMs are over-kill.
 
-> **OBS**: SQLiterally provides a lot of freedom by design and it's *not* meant to reduce the SQL learning curve. It won't prevent you from writing incorrect queries.
+> **OBS**: _SQLiterally provides a lot of freedom by design and it's not meant to reduce the SQL learning curve. It won't prevent you from writing incorrect queries._
 
 ## Features
 
