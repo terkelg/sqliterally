@@ -5,6 +5,7 @@
   "description": "Lightweight SQL query builder",
   "module": "dist/sqliterally.mjs",
   "main": "dist/sqliterally.js",
+  "types": "types/index.d.ts",
   "license": "MIT",
   "author": {
     "name": "Terkel Gjervig",
@@ -21,7 +22,8 @@
     "prepublish": "npm run build"
   },
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "keywords": [
     "db",
