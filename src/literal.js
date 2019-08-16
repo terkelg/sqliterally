@@ -1,5 +1,5 @@
-import {mergeAdjecent} from './utils';
-import {STRINGIFY, ADDTOCLAUSE} from './constants';
+import { mergeAdjecent } from './utils';
+import { STRINGIFY, ADDTOCLAUSE } from './constants';
 
 export default class Literal {
 	constructor(pieces = [''], values = [], delimiter = '') {
@@ -38,7 +38,8 @@ export default class Literal {
 			return clone;
 		}
 
-		clone.pieces[clone.pieces.length - 1] += `${delimiter || literal.delimiter}${literal.pieces[0]}`;
+		clone.pieces[clone.pieces.length - 1] += `${delimiter ||
+			literal.delimiter}${literal.pieces[0]}`;
 		const [_, ...pieces] = literal.pieces;
 		clone.pieces.push(...pieces);
 		clone.values.push(...literal.values);
@@ -63,7 +64,9 @@ export default class Literal {
 	}
 
 	[STRINGIFY](type = 'pg') {
-		return this.pieces.reduce((acc, part, i) => acc + (type == 'pg' ? '$' + i : '?') + part);
+		return this.pieces.reduce(
+			(acc, part, i) => acc + (type == 'pg' ? '$' + i : '?') + part
+		);
 	}
 
 	get text() {

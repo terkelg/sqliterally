@@ -2,22 +2,22 @@ export const ADDTOCLAUSE = Symbol('addToClause');
 export const STRINGIFY = Symbol('stringify');
 
 export const clauseOrder = [
-	`select`,
-	`insert`,
-	`delete`,
-	`values`,
-	`update`,
-	`set`,
-	`from`,
-	`join`,
-	`where`,
-	`onDuplicate`,
-	`groupBy`,
-	`having`,
-	`orderBy`,
-	`limit`,
-	`returning`,
-	`lock`
+	'select',
+	'insert',
+	'delete',
+	'values',
+	'update',
+	'set',
+	'from',
+	'join',
+	'where',
+	'onDuplicate',
+	'groupBy',
+	'having',
+	'orderBy',
+	'limit',
+	'returning',
+	'lock'
 ];
 
 export const startingClauses = {

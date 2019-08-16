@@ -45,7 +45,9 @@ This module exposes two module definitions:
 ## Installation
 
 ```
-npm install sqliterally --save
+npm install sqliterally
+# or
+yarn add sqliterally
 ```
 
 ## Usage
@@ -398,6 +400,6 @@ This module is inspired by [sql-concat](https://github.com/TehShrike/sql-concat)
 The `sql` function and merge algorithm are based on [prepare-sql](https://github.com/hyperdivision/prepare-sql).
 
 
-## License
+## [License](./LICENSE)
 
 MIT © [Terkel Gjervig](https://terkel.com)

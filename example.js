@@ -1,4 +1,4 @@
-const {query, sql} = require('./dist/sqliterally.js');
+const { query, sql } = require('./dist/sqliterally.js');
 
 const number = 34;
 const name = 'Potter';
@@ -19,14 +19,8 @@ result = sql`SELECT * FROM movies WHERE title = ${name}`.append(sub);
 console.log(result.text, result.values);
 
 // Query
-result = query
-	.select`title`
-	.select`id`
-	.from`movies`
-	.where`age < ${number}`
-	.where`name = ${name}`
-	.limit`5`
-	.build();
+result = query.select`title`.select`id`.from`movies`.where`age < ${number}`
+	.where`name = ${name}`.limit`5`.build();
 
 console.log(result.text, result.values); // postgres
-console.log(result.sql, result.values);  // mysql
+console.log(result.sql, result.values); // mysql

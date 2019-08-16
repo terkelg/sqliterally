@@ -1,0 +1,12 @@
+{
+  "singleQuote": true,
+  "useTabs": true,
+  "overrides": [
+    {
+      "files": ["package.json", "*.yml", ".prettierrc"],
+      "options": {
+        "useTabs": false
+      }
+    }
+  ]
+}

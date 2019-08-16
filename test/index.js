@@ -1,12 +1,11 @@
 const test = require('tape');
-const {sql, query} = require('../dist/sqliterally');
+const { sql, query } = require('../dist/sqliterally');
 
 test('sqliterally', t => {
 	t.is(typeof sql, 'function', 'exports object');
-	t.is(typeof query , 'object', 'exports object');
+	t.is(typeof query, 'object', 'exports object');
 	t.end();
 });
-
 
 test('sql', t => {
 	let x = sql`SELECT * FROM animals`;
@@ -57,11 +56,18 @@ test('sql: empty input', t => {
 });
 
 test('sql: nested', t => {
-	let field = 'cust_name', value = 5000;
+	let field = 'cust_name',
+		value = 5000;
 	let sub = sql`SELECT DISTINCT cust_id, ${field} FROM orders WHERE order_value > ${value}`;
 	let x = sql`SELECT * FROM customers WHERE cust_id IN (${sub})`;
-	t.is(x.text, 'SELECT * FROM customers WHERE cust_id IN (SELECT DISTINCT cust_id, $1 FROM orders WHERE order_value > $2)');
-	t.is(x.sql, 'SELECT * FROM customers WHERE cust_id IN (SELECT DISTINCT cust_id, ? FROM orders WHERE order_value > ?)');
+	t.is(
+		x.text,
+		'SELECT * FROM customers WHERE cust_id IN (SELECT DISTINCT cust_id, $1 FROM orders WHERE order_value > $2)'
+	);
+	t.is(
+		x.sql,
+		'SELECT * FROM customers WHERE cust_id IN (SELECT DISTINCT cust_id, ? FROM orders WHERE order_value > ?)'
+	);
 	t.same(x.values, [field, value]);
 	t.end();
 });
@@ -69,11 +75,23 @@ test('sql: nested', t => {
 test('query', t => {
 	let x = query.select`*`.from`animals`;
 	let clauseMethods = [
-		'select', 'from', 'join', 'leftJoin', 'where', 'orWhere',
-		'having', 'orHaving', 'groupBy', 'orderBy', 'update',
-		'limit', 'lockInShareMode', 'forUpdate', 'returning'
-	]
-	clauseMethods.forEach(clause => t.is(clause in query, true))
+		'select',
+		'from',
+		'join',
+		'leftJoin',
+		'where',
+		'orWhere',
+		'having',
+		'orHaving',
+		'groupBy',
+		'orderBy',
+		'update',
+		'limit',
+		'lockInShareMode',
+		'forUpdate',
+		'returning'
+	];
+	clauseMethods.forEach(clause => t.is(clause in query, true));
 	t.end();
 });
 
@@ -94,11 +112,7 @@ test('query: build custom delimiter', t => {
 test('query: parameterized', t => {
 	let name = 'dumbo';
 	let column = 'name';
-	let x = query
-		.select`${column}`
-		.from`animals`
-		.where`name = ${name}`
-		.build();
+	let x = query.select`${column}`.from`animals`.where`name = ${name}`.build();
 
 	t.is(x.text, 'SELECT $1\nFROM animals\nWHERE name = $2');
 	t.is(x.sql, 'SELECT ?\nFROM animals\nWHERE name = ?');
@@ -107,22 +121,13 @@ test('query: parameterized', t => {
 });
 
 test('query: order clauses', t => {
-	let x = query
-		.where`a = ${1}`
-		.from`table`
-		.select`*`
-		.forUpdate
-		.where`b = ${2}`
-		.build()
+	let x = query.where`a = ${1}`.from`table`.select`*`.forUpdate
+		.where`b = ${2}`.build();
 	t.is(x.text, 'SELECT *\nFROM table\nWHERE a = $1 AND b = $2\nFOR UPDATE');
 	t.is(x.sql, 'SELECT *\nFROM table\nWHERE a = ? AND b = ?\nFOR UPDATE');
 	t.same(x.values, [1, 2]);
 
-	x = query
-		.set`kind = Dramatic`
-		.update`films`
-		.set`duration = 120`
-		.build()
+	x = query.set`kind = Dramatic`.update`films`.set`duration = 120`.build();
 	t.is(x.text, 'UPDATE films\nSET kind = Dramatic, duration = 120');
 	t.same(x.values, []);
 
@@ -130,12 +135,7 @@ test('query: order clauses', t => {
 });
 
 test('query: select clause', t => {
-	let x = query
-		.select`a, b, ${'c'}`
-		.select`x`
-		.select`y`
-		.select`z`
-		.build();
+	let x = query.select`a, b, ${'c'}`.select`x`.select`y`.select`z`.build();
 
 	t.is(x.text, 'SELECT a, b, $1, x, y, z');
 	t.is(x.sql, 'SELECT a, b, ?, x, y, z');
@@ -144,11 +144,7 @@ test('query: select clause', t => {
 });
 
 test('query: from clause', t => {
-	let x = query
-		.from`animals`
-		.from`humans`
-		.from`aliens`
-		.build();
+	let x = query.from`animals`.from`humans`.from`aliens`.build();
 
 	t.is(x.text, 'FROM aliens');
 	t.is(x.sql, 'FROM aliens');
@@ -157,30 +153,18 @@ test('query: from clause', t => {
 });
 
 test('query: where clause', t => {
-	let x = query
-		.where`a > b`
-		.where`z = y`
-		.where`c = ${11}`
-		.build();
+	let x = query.where`a > b`.where`z = y`.where`c = ${11}`.build();
 	t.is(x.text, 'WHERE a > b AND z = y AND c = $1');
 	t.is(x.sql, 'WHERE a > b AND z = y AND c = ?');
 	t.same(x.values, [11]);
 
-	x = query
-		.orWhere`a > b`
-		.orWhere`z = y`
-		.orWhere`c = ${11}`
-		.build();
+	x = query.orWhere`a > b`.orWhere`z = y`.orWhere`c = ${11}`.build();
 	t.is(x.text, 'WHERE a > b OR z = y OR c = $1');
 	t.is(x.sql, 'WHERE a > b OR z = y OR c = ?');
 	t.same(x.values, [11]);
 
-	x = query
-		.where`a > b`
-		.orWhere`z = y`
-		.where`c = ${11}`
-		.where`(q > 1 AND q < 10)`
-		.build();
+	x = query.where`a > b`.orWhere`z = y`.where`c = ${11}`
+		.where`(q > 1 AND q < 10)`.build();
 	t.is(x.text, 'WHERE a > b OR z = y AND c = $1 AND (q > 1 AND q < 10)');
 	t.is(x.sql, 'WHERE a > b OR z = y AND c = ? AND (q > 1 AND q < 10)');
 	t.same(x.values, [11]);
@@ -189,23 +173,16 @@ test('query: where clause', t => {
 });
 
 test('query: update', t => {
-	let x = query
-		.update`films`
-		.set`kind = Dramatic`
-		.set`duration = 120`
-		.where`id = 2`
-		.returning`*`
-		.build();
-	t.is(x.text, 'UPDATE films\nSET kind = Dramatic, duration = 120\nWHERE id = 2\nRETURNING *');
+	let x = query.update`films`.set`kind = Dramatic`.set`duration = 120`
+		.where`id = 2`.returning`*`.build();
+	t.is(
+		x.text,
+		'UPDATE films\nSET kind = Dramatic, duration = 120\nWHERE id = 2\nRETURNING *'
+	);
 	t.same(x.values, []);
 
-	x = query
-		.update`not me`
-		.update`films`
-		.set`kind = Dramatic`
-		.returning`title`
-		.returning`duration`
-		.build();
+	x = query.update`not me`.update`films`.set`kind = Dramatic`.returning`title`
+		.returning`duration`.build();
 	t.is(x.text, 'UPDATE films\nSET kind = Dramatic\nRETURNING title, duration');
 	t.same(x.values, []);
 
@@ -213,24 +190,15 @@ test('query: update', t => {
 });
 
 test('query: join', t => {
-	let x = query
-		.join`a ON b.id = a.id`
-		.join`c ON d`
-		.build();
+	let x = query.join`a ON b.id = a.id`.join`c ON d`.build();
 	t.is(x.text, 'JOIN a ON b.id = a.id\nJOIN c ON d');
 	t.same(x.values, []);
 
-	x = query
-		.leftJoin`a ON b.id = a.id`
-		.leftJoin`c ON d`
-		.build();
+	x = query.leftJoin`a ON b.id = a.id`.leftJoin`c ON d`.build();
 	t.is(x.text, 'LEFT JOIN a ON b.id = a.id\nLEFT JOIN c ON d');
 	t.same(x.values, []);
 
-	x = query
-		.join`a ON b.id = a.id`
-		.leftJoin`c ON d`
-		.build();
+	x = query.join`a ON b.id = a.id`.leftJoin`c ON d`.build();
 	t.is(x.text, 'JOIN a ON b.id = a.id\nLEFT JOIN c ON d');
 	t.same(x.values, []);
 
@@ -238,17 +206,13 @@ test('query: join', t => {
 });
 
 test('query: having', t => {
-	let x = query
-		.having`MAX (list_price) > 4000`
-		.having`MIN (list_price) < 500`
-	.build();
+	let x = query.having`MAX (list_price) > 4000`
+		.having`MIN (list_price) < 500`.build();
 	t.is(x.text, 'HAVING MAX (list_price) > 4000 AND MIN (list_price) < 500');
 	t.same(x.values, []);
 
-	x = query
-		.having`MAX (list_price) > 4000`
-		.orHaving`MIN (list_price) < 500`
-	.build();
+	x = query.having`MAX (list_price) > 4000`
+		.orHaving`MIN (list_price) < 500`.build();
 	t.is(x.text, 'HAVING MAX (list_price) > 4000 OR MIN (list_price) < 500');
 	t.same(x.values, []);
 
@@ -256,11 +220,7 @@ test('query: having', t => {
 });
 
 test('query: group by', t => {
-	let x = query
-		.groupBy`a, b`
-		.groupBy`c`
-		.groupBy`d`
-	.build();
+	let x = query.groupBy`a, b`.groupBy`c`.groupBy`d`.build();
 
 	t.is(x.text, 'GROUP BY a, b, c, d');
 	t.same(x.values, []);
@@ -268,11 +228,7 @@ test('query: group by', t => {
 });
 
 test('query: order by', t => {
-	let x = query
-		.orderBy`a, b`
-		.orderBy`COUNT(c) DESC`
-		.orderBy`d`
-	.build();
+	let x = query.orderBy`a, b`.orderBy`COUNT(c) DESC`.orderBy`d`.build();
 
 	t.is(x.text, 'ORDER BY a, b, COUNT(c) DESC, d');
 	t.same(x.values, []);
@@ -280,10 +236,7 @@ test('query: order by', t => {
 });
 
 test('query: limit', t => {
-	let x = query
-		.limit`10`
-		.limit`5`
-	.build();
+	let x = query.limit`10`.limit`5`.build();
 
 	t.is(x.text, 'LIMIT 5');
 	t.same(x.values, []);
@@ -291,10 +244,7 @@ test('query: limit', t => {
 });
 
 test('query: returning', t => {
-	let x = query
-		.returning`name`
-		.returning`email`
-	.build();
+	let x = query.returning`name`.returning`email`.build();
 
 	t.is(x.text, 'RETURNING name, email');
 	t.same(x.values, []);
@@ -302,31 +252,21 @@ test('query: returning', t => {
 });
 
 test('query: lock share mode', t => {
-	let x = query
-		.lockInShareMode
-		.build();
+	let x = query.lockInShareMode.build();
 	t.is(x.text, 'LOCK IN SHARE MODE');
 	t.same(x.values, []);
 
-	x = query
-		.lockInShareMode
-		.lockInShareMode
-		.build();
+	x = query.lockInShareMode.lockInShareMode.build();
 	t.is(x.text, 'LOCK IN SHARE MODE');
 	t.end();
 });
 
 test('query: for update', t => {
-	let x = query
-		.forUpdate
-		.build();
+	let x = query.forUpdate.build();
 	t.is(x.text, 'FOR UPDATE');
 	t.same(x.values, []);
 
-	x = query
-		.forUpdate
-		.forUpdate
-		.build();
+	x = query.forUpdate.forUpdate.build();
 	t.is(x.text, 'FOR UPDATE');
 	t.end();
 });
@@ -337,15 +277,21 @@ test('query: build twice', t => {
 	x = x.build(' ');
 	t.is(x.text, 'SELECT * FROM users WHERE id = $1');
 	t.is(x.sql, 'SELECT * FROM users WHERE id = ?');
-	t.same(x.values , [123]);
+	t.same(x.values, [123]);
 	t.end();
 });
 
 test('query: nested', t => {
 	let sub = query.select`*`.from`users`.where`id = ${123}`;
 	let main = query.select`*`.from`posts`.where`user = (${sub})`.build();
-	t.is(main.text, 'SELECT *\nFROM posts\nWHERE user = (SELECT * FROM users WHERE id = $1)');
-	t.is(main.sql, 'SELECT *\nFROM posts\nWHERE user = (SELECT * FROM users WHERE id = ?)');
-	t.same(main.values , [123]);
+	t.is(
+		main.text,
+		'SELECT *\nFROM posts\nWHERE user = (SELECT * FROM users WHERE id = $1)'
+	);
+	t.is(
+		main.sql,
+		'SELECT *\nFROM posts\nWHERE user = (SELECT * FROM users WHERE id = ?)'
+	);
+	t.same(main.values, [123]);
 	t.end();
 });

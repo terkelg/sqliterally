@@ -18,7 +18,8 @@
     "build": "rimraf dist && rollup -c",
     "pretest": "npm run build",
     "test": "tape test/*.js | tap-spec",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "format": "prettier --write '{src,test}/**/*.js' example.js rollup.config.js package.json"
   },
   "files": [
     "dist"
@@ -41,6 +42,7 @@
     "rimraf": "^2.6.3",
     "rollup": "^1.19.4",
     "tap-spec": "5.0.0",
-    "tape": "4.11.0"
+    "tape": "4.11.0",
+    "prettier": "^1.18.2"
   }
 }

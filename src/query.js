@@ -1,6 +1,6 @@
-import {copy} from './utils';
+import { copy } from './utils';
 import Literal from './literal';
-import {clauseOrder, clauseStrings, ADDTOCLAUSE} from './constants';
+import { clauseOrder, clauseStrings, ADDTOCLAUSE } from './constants';
 
 export default class Query {
 	constructor(clauses) {
@@ -15,10 +15,12 @@ export default class Query {
 
 	build(delimiter = '\n') {
 		return clauseOrder
-			.map(key => ({key, expressions: this.clauses[key]}))
+			.map(key => ({ key, expressions: this.clauses[key] }))
 			.filter(clause => clause.expressions && clause.expressions.length > 0)
-			.map(({expressions, key}) =>
-				expressions.reduce((acc, literal) => acc.append(literal)).prefix(clauseStrings[key])
+			.map(({ expressions, key }) =>
+				expressions
+					.reduce((acc, literal) => acc.append(literal))
+					.prefix(clauseStrings[key])
 			)
 			.reduce((acc, query) => acc.append(query, delimiter));
 	}
@@ -40,11 +42,17 @@ export default class Query {
 	}
 
 	join(pieces, ...values) {
-		return this[ADDTOCLAUSE]('join', new Literal(pieces, values, '\n').prefix('JOIN '));
+		return this[ADDTOCLAUSE](
+			'join',
+			new Literal(pieces, values, '\n').prefix('JOIN ')
+		);
 	}
 
 	leftJoin(pieces, ...values) {
-		return this[ADDTOCLAUSE]('join', new Literal(pieces, values, '\n').prefix('LEFT JOIN '));
+		return this[ADDTOCLAUSE](
+			'join',
+			new Literal(pieces, values, '\n').prefix('LEFT JOIN ')
+		);
 	}
 
 	where(pieces, ...values) {
