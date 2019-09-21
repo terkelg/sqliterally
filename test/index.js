@@ -56,6 +56,13 @@ test('sql: empty input', t => {
 	t.end();
 });
 
+test('sql: null and undefined input', t => {
+	let x = sql`INSERT INTO test VALUES (${undefined}, ${null})`;
+	t.is(x.text, 'INSERT INTO test VALUES ($1, $2)');
+	t.same(x.values, [undefined, null]);
+	t.end();
+});
+
 test('sql: nested', t => {
 	let field = 'cust_name', value = 5000;
 	let sub = sql`SELECT DISTINCT cust_id, ${field} FROM orders WHERE order_value > ${value}`;

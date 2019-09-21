@@ -9,7 +9,7 @@ export default class Literal {
 
 		for (let i = 0, j = 1, k = 0; i < values.length; i++, j++, k++) {
 			let val = values[i];
-			if (val[ADDTOCLAUSE]) val = val.build(' ');
+			if (val && val[ADDTOCLAUSE]) val = val.build(' ');
 			if (val instanceof Literal) {
 				this.values.splice(k, 1);
 
