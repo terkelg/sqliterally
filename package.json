@@ -38,9 +38,9 @@
     "statements"
   ],
   "devDependencies": {
-    "rimraf": "^2.6.3",
-    "rollup": "^1.19.4",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.0.6",
     "tap-spec": "5.0.0",
-    "tape": "4.11.0"
+    "tape": "4.13.2"
   }
 }
