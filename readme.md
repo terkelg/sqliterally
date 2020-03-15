@@ -6,9 +6,9 @@
   <a href="https://npmjs.org/package/sqliterally">
     <img src="https://badgen.now.sh/npm/v/sqliterally" alt="version" />
   </a>
-  <a href="https://travis-ci.org/terkelg/sqliterally">
-    <img src="https://badgen.now.sh/travis/terkelg/sqliterally" alt="travis" />
-  </a>
+	<a href="https://github.com/terkelg/sqliterally/actions">
+		<img src="https://github.com/terkelg/sqliterally/workflows/CI/badge.svg" alt="integration status" />
+	</a>
   <a href="https://npmjs.org/package/sqliterally">
     <img src="https://badgen.now.sh/npm/dm/sqliterally" alt="downloads" />
   </a>
@@ -53,7 +53,7 @@ npm install sqliterally --save
 The module exposes two functions:
  * [**sql**](#sqlstring): Use this to construct any query. Useful for complex SQL scripts or when you know the full query and all you need is a parameterized query object.
  * [**query**](#query): Use this to programmatically compose parameterized queries. Useful for constructing queries as you go.
- 
+
  ```js
 import {sql, query} from 'sqliterally';
 
@@ -90,7 +90,7 @@ q.build();
 
 Returns: `Object`
 
-The string can contain nested SQLiterally `query` and `sql` objects. 
+The string can contain nested SQLiterally `query` and `sql` objects.
 Indexes and values are taken care of automatically.
 
 You can pass this directly to [`node-pg`](https://github.com/brianc/node-postgres) and [`mysql`](https://github.com/mysqljs/mysql).
@@ -101,18 +101,18 @@ let max = 10, min = 0;
 
 sub = sql`age > ${min} AND age < ${max}`;
 sql`SELECT * FROM x WHERE name = ${name} OR (${sub}) LIMIT 2`;
-// => { 
-//  text: 'SELECT * FROM x WHERE name = $1 OR (age > $2 OR age < $3) LIMIT 2', 
+// => {
+//  text: 'SELECT * FROM x WHERE name = $1 OR (age > $2 OR age < $3) LIMIT 2',
 //  sql: 'SELECT * FROM x WHERE name = ? OR (age > ? OR age < ?) LIMIT 2',
 //  values: ['Harry Potter', 0, 10]
 // }
 
 let script = sql`
-CREATE OR REPLACE FUNCTION update_modified_column()   
+CREATE OR REPLACE FUNCTION update_modified_column()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.modified = now();
-    RETURN NEW;   
+    RETURN NEW;
 END;
 $$ language 'plpgsql';
 `
@@ -173,7 +173,7 @@ main.build();
 
 Constructs the final query and returns a [`sql`](#sql) query object ready for [`node-pg`](https://github.com/brianc/node-postgres) and [`mysql`](https://github.com/mysqljs/mysql).
 
-> You can still append to the returned `sql` object or use it as a sub-query. You don't have to call `.build()` when nesting queries – there's no reason to call build before you need the parameterized string and values. 
+> You can still append to the returned `sql` object or use it as a sub-query. You don't have to call `.build()` when nesting queries – there's no reason to call build before you need the parameterized string and values.
 
 ##### delimiter
 
@@ -189,13 +189,13 @@ Returns: `query`
 All `.select` calls get reduced and joined with `, ` on `.build()`.
 
 ```js
-query.select`*`.build() 
+query.select`*`.build()
 // => SELECT *
-query.select`cat`.select`zebra`.build() 
+query.select`cat`.select`zebra`.build()
 // => SELECT cat, zebra
-query.select`cat, dog`.select`zebra`.build() 
+query.select`cat, dog`.select`zebra`.build()
 // => SELECT cat, dog, zebra
-query.select`something`.select`5 * 3 AS result`.build() 
+query.select`something`.select`5 * 3 AS result`.build()
 // => SELECT something, 5 * 3 AS result
 ```
 
@@ -207,9 +207,9 @@ Returns: `query`
 Calling `.update` more than once result in the clause being overwritten.
 
 ```js
-query.update`film`.build() 
+query.update`film`.build()
 // => UPDATE film
-query.update`film`.update`books`.build() 
+query.update`film`.update`books`.build()
 // => UPDATE books
 ```
 
@@ -220,9 +220,9 @@ Returns: `query`
 All `.set` calls get reduced and joined with `, ` on `.build()`.
 
 ```js
-query.set`a = b`.build() 
+query.set`a = b`.build()
 // => SET a = b
-query.set`a = b`.set`z = y`.build() 
+query.set`a = b`.set`z = y`.build()
 // => SET a = b, z = y
 ```
 
@@ -233,11 +233,11 @@ Returns: `query`
 Calling `.from` more than once result in the clause being overwritten.
 
 ```js
-query.from`film`.build() 
+query.from`film`.build()
 // => FROM film
-query.from`film AS f`.build() 
+query.from`film AS f`.build()
 // => FROM film AS f
-query.from`film`.from`books`.build() 
+query.from`film`.from`books`.build()
 // => FROM books
 ```
 
@@ -246,18 +246,18 @@ query.from`film`.from`books`.build()
 Returns: `query`
 
 ```js
-query.join`c ON d`.build() 
+query.join`c ON d`.build()
 // => JOIN c ON d
-query.join`a ON b.id`.join`c ON d`.build() 
+query.join`a ON b.id`.join`c ON d`.build()
 // => JOIN a ON b.id\nJOIN c ON d
 ```
 
 #### leftJoin\`string\`
 
 ```js
-query.leftJoin`c ON d`.build() 
+query.leftJoin`c ON d`.build()
 // => LEFT JOIN c ON d
-query.leftJoin`a ON b.id`.leftJoin`c ON d`.build() 
+query.leftJoin`a ON b.id`.leftJoin`c ON d`.build()
 // => LEFT JOIN a ON b.id\nLEFT JOIN c ON d
 ```
 
@@ -268,11 +268,11 @@ Returns: `query`
 All `.where` calls get reduced and joined with ` AND ` on `.build()`.
 
 ```js
-query.where`a < b`.build() 
+query.where`a < b`.build()
 // => WHERE a < b
-query.where`a < b`.where`z = y`.build() 
+query.where`a < b`.where`z = y`.build()
 // => WHERE a < b AND z = y
-query.where`a = z OR a = y`.build() 
+query.where`a = z OR a = y`.build()
 // => WHERE a = z OR a = y
 ```
 
@@ -285,7 +285,7 @@ All `.orWhere` calls get reduced and joined with ` OR ` on `.build()`.
 ```js
 query.orWhere`a < b`.build()
 // => WHERE a < b
-query.orWhere`a < b`.orWhere`z = y`.build() 
+query.orWhere`a < b`.orWhere`z = y`.build()
 // => WHERE a < b OR z = y
 ```
 
