@@ -39,7 +39,7 @@
   ],
   "devDependencies": {
     "rimraf": "^3.0.2",
-    "rollup": "^2.0.6",
+    "rollup": "^2.1.0",
     "tap-spec": "5.0.0",
     "tape": "4.13.2"
   }
