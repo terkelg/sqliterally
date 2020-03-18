@@ -1,6 +1,6 @@
 {
   "name": "sqliterally",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "repository": "terkelg/sqliterally",
   "description": "Lightweight SQL query builder",
   "module": "dist/sqliterally.mjs",
